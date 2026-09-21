@@ -1,0 +1,41 @@
+name: docker-compose-project
+description: A GitHub Action for managing Docker Compose projects.
+on:
+  push:
+    branches:
+      - main
+    
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v6
+      - name: log in to Docker hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+      - name: Build and Push Docker images
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-compose-project:latest
+      - name: Deployment on GCP
+        uses: google-github-actions/deploy-cloudrun@v1
+        with:
+          host: ${{secrets.GCP_VM_HOST}}
+          username: ${{secrets.GCP_VM_USERNAME}}
+          key: ${{secrets.GCP_VM_SSH_KEY}}
+          scripts: |
+            echo "Pull the image from docker hub"
+            docker pull ${{secrets.DOCKERHUB_USERNAME }}/docker-compose-project:latest
+            echo "Stoping Old Container"
+            docker stop docker-compose-project || true
+            echo "Removing Old Container"
+            docker rm docker-compose-project || true
+            echo "Starting New Container"
+            docker run -d --name docker-compose-project -p 8080:3000 ${{secrets.DOCKERHUB_USERNAME }}/docker-compose-project:latest
+            echo "Deployment Completed"
+    
