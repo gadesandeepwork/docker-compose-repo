@@ -2,8 +2,9 @@ networks:
   mynetwork:
 services:
   backend:
+    image: gadesandeepwork/docker-compose-project:latest
     build:
-      image: gadesandeepwork/docker-compose-project:latest
+      context: .
     networks:
       - mynetwork
     ports:
