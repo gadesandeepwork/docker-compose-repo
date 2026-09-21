@@ -29,13 +29,11 @@ jobs:
           username: ${{secrets.GCP_VM_USERNAME}}
           key: ${{secrets.GCP_VM_SSH_KEY}}
           script: |
-            echo "Pull the image from docker hub"
-            docker pull ${{secrets.DOCKERHUB_USERNAME }}/docker-compose-project:latest
-            echo "Stoping Old Container"
-            docker stop docker-compose-project || true
-            echo "Removing Old Container"
-            docker rm docker-compose-project || true
-            echo "Starting New Container"
-            docker run -d --name docker-compose-project -p 8080:3000 ${{secrets.DOCKERHUB_USERNAME }}/docker-compose-project:latest
-            echo "Deployment Completed"
-    
+            echo "Remove old docker compose repo"
+            rm -rf docker-compose-repo
+            echo "Clone the github repo code."
+            git clone https://github.com/gadesandeepwork/docker-compose-repo.git
+            cd docker-compose-repo
+            docker compose pull
+            docker compose down
+            docker compose up -d
