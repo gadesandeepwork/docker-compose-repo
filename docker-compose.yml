@@ -16,8 +16,7 @@ services:
       DB_PASSWORD: examplepassword
       DB_NAME: exampledb
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     restart: unless-stopped
   db:
     image: mysql
@@ -31,11 +30,6 @@ services:
       MYSQL_ROOT_PASSWORD: examplepassword
     volumes:
       - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
 
 volumes:
   db_data:
