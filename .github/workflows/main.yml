@@ -1,0 +1,39 @@
+name: docker-compose-project
+description: A GitHub Action for managing Docker Compose projects.
+on:
+  push:
+    branches:
+      - main
+    
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v6
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+            username: ${{secrets.DOCKERHUB_USERNAME}}
+            password: ${{secrets.DOCKERHUB_TOKEN}}
+      - name: Build and Push Docker images
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-compose-project:latest
+      - name: Deployment on GCP
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{secrets.GCP_VM_HOST}}
+          username: ${{secrets.GCP_VM_USERNAME}}
+          key: ${{secrets.GCP_VM_SSH_KEY}}
+          script: |
+            echo "Remove old docker compose repo"
+            rm -rf docker-compose-repo
+            echo "Clone the github repo code."
+            git clone https://github.com/gadesandeepwork/docker-compose-repo.git
+            cd docker-compose-repo
+            docker compose pull
+            docker compose down
+            docker compose up -d

@@ -2,6 +2,7 @@ networks:
   mynetwork:
 services:
   backend:
+    image: gadesandeepwork/docker-compose-project:latest
     build:
       context: .
     networks:
@@ -15,8 +16,7 @@ services:
       DB_PASSWORD: examplepassword
       DB_NAME: exampledb
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     restart: unless-stopped
   db:
     image: mysql
