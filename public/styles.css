@@ -1,0 +1,44 @@
+:root {
+  color: #17211d;
+  background: #edf2e8;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background-color: #edf2e8;
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, .55) 25%, transparent 25%), linear-gradient(45deg, rgba(192, 215, 196, .4) 25%, transparent 25%);
+  background-size: 34px 34px;
+}
+
+main { width: min(960px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0; }
+header { padding: 0 0 22px; margin-bottom: 28px; border-bottom: 4px solid #17634e; }
+h1 { margin: 0; color: #113f34; font-size: clamp(2.4rem, 7vw, 4.5rem); line-height: .95; letter-spacing: 0; }
+header p { margin: 12px 0 0; color: #415a4e; font: 1rem/1.5 system-ui, sans-serif; }
+section { margin-bottom: 24px; padding: 26px; border: 1px solid #c6d4c6; background: #fffdf8; box-shadow: 8px 8px 0 #bad1bd; }
+h2 { margin: 0 0 18px; color: #113f34; font-size: 1.45rem; }
+form { display: grid; grid-template-columns: 1fr 1fr 130px; gap: 12px; }
+input, button { min-height: 44px; padding: 10px 12px; border: 1px solid #8ba595; border-radius: 3px; font: inherit; }
+input { background: #fff; color: #17211d; }
+input:first-child { grid-column: span 2; }
+input:focus { outline: 3px solid #e3b66d; border-color: #8c5a16; }
+button { color: #fff; cursor: pointer; border-color: #17634e; background: #17634e; font-weight: 700; transition: background .15s ease, transform .15s ease; }
+button:hover { background: #0e493a; transform: translateY(-1px); }
+#message { min-height: 24px; margin: 14px 0 0; color: #a12d23; font-family: system-ui, sans-serif; }
+#products { display: grid; gap: 12px; }
+.product { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px; border-left: 5px solid #dd982f; background: #eef5ec; }
+.product h3, .product p { margin: 0; }
+.product h3 { color: #163d31; }
+.product p, .empty { margin-top: 5px; color: #526057; font: .9rem/1.4 system-ui, sans-serif; }
+.product button { min-height: 34px; padding: 6px 10px; border-color: #a12d23; background: transparent; color: #a12d23; }
+.product button:hover { background: #a12d23; color: #fff; }
+@media (max-width: 600px) {
+  main { width: min(100% - 24px, 960px); padding: 32px 0; }
+  section { padding: 18px; box-shadow: 5px 5px 0 #bad1bd; }
+  form { grid-template-columns: 1fr; }
+  input:first-child { grid-column: auto; }
+  .product { align-items: flex-start; flex-direction: column; }
+}

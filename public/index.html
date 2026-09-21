@@ -4,31 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Product Inventory</title>
-    <style>
-      :root { color: #17211d; background: #e7efe8; font-family: Georgia, "Times New Roman", serif; }
-      * { box-sizing: border-box; }
-      body { margin: 0; min-height: 100vh; background: linear-gradient(135deg, #e7efe8, #f6f1e4); }
-      main { width: min(900px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0; }
-      header { border-bottom: 3px solid #1b5e4b; padding-bottom: 20px; margin-bottom: 28px; }
-      h1 { font-size: clamp(2.25rem, 5vw, 4rem); letter-spacing: 0; margin: 0; color: #123a30; }
-      header p { margin: 8px 0 0; font: 1rem/1.5 system-ui, sans-serif; color: #4e5d54; }
-      section { background: #fffdf8; border: 1px solid #c9d5cc; padding: 24px; margin-bottom: 18px; box-shadow: 6px 6px 0 #c4d9c9; }
-      h2 { margin: 0 0 18px; font-size: 1.3rem; }
-      form { display: grid; grid-template-columns: 1fr 1fr 130px; gap: 12px; }
-      input, button { min-height: 42px; border-radius: 0; border: 1px solid #799384; padding: 10px; font: inherit; }
-      input { background: #fff; }
-      input:first-child { grid-column: span 2; }
-      button { cursor: pointer; background: #1b5e4b; color: #fff; border-color: #1b5e4b; font-weight: bold; }
-      button:hover { background: #123a30; }
-      #message { min-height: 24px; margin: 14px 0 0; font-family: system-ui, sans-serif; color: #a12d23; }
-      #products { display: grid; gap: 10px; }
-      .product { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px; background: #eef4ed; border-left: 4px solid #d88a30; }
-      .product h3, .product p { margin: 0; }
-      .product p { margin-top: 4px; color: #526057; font-family: system-ui, sans-serif; font-size: .9rem; }
-      .product button { background: transparent; color: #a12d23; border-color: #a12d23; min-height: 34px; padding: 6px 10px; }
-      .empty { color: #526057; font-family: system-ui, sans-serif; }
-      @media (max-width: 600px) { form { grid-template-columns: 1fr; } input:first-child { grid-column: auto; } .product { align-items: flex-start; flex-direction: column; } }
-    </style>
+    <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <main>
@@ -39,9 +15,9 @@
       <section>
         <h2>Add product</h2>
         <form id="product-form">
-          <input id="name" placeholder="Product name" required />
-          <input id="description" placeholder="Description" />
-          <input id="price" type="number" min="0" step="0.01" placeholder="Price" required />
+          <input id="product-name" placeholder="Product name" required />
+          <input id="product-description" placeholder="Description" />
+          <input id="product-price" type="number" min="0" step="0.01" placeholder="Price" required />
           <button type="submit">Add product</button>
         </form>
         <p id="message" role="status"></p>
@@ -51,51 +27,6 @@
         <div id="products"><p class="empty">Loading products...</p></div>
       </section>
     </main>
-    <script>
-      const form = document.querySelector('#product-form');
-      const productsElement = document.querySelector('#products');
-      const messageElement = document.querySelector('#message');
-
-      function showMessage(message = '') { messageElement.textContent = message; }
-
-      async function loadProducts() {
-        try {
-          const response = await fetch('/api/products');
-          if (!response.ok) throw new Error('Could not load products.');
-          const products = await response.json();
-          productsElement.replaceChildren();
-          if (products.length === 0) {
-            productsElement.innerHTML = '<p class="empty">No products yet.</p>';
-            return;
-          }
-          products.forEach((product) => {
-            const item = document.createElement('article');
-            item.className = 'product';
-            item.innerHTML = `<div><h3>${product.name} - $${Number(product.price).toFixed(2)}</h3><p>${product.description || 'No description'}</p></div>`;
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.addEventListener('click', async () => {
-              await fetch(`/api/products/${product.id}`, { method: 'DELETE' });
-              loadProducts();
-            });
-            item.append(deleteButton);
-            productsElement.append(item);
-          });
-        } catch (error) { productsElement.innerHTML = `<p class="empty">${error.message}</p>`; }
-      }
-
-      form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        showMessage();
-        const response = await fetch('/api/products', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: name.value, description: description.value, price: price.value })
-        });
-        if (!response.ok) { showMessage('Product could not be added.'); return; }
-        form.reset();
-        loadProducts();
-      });
-      loadProducts();
-    </script>
+    <script src="/app.js"></script>
   </body>
 </html>
