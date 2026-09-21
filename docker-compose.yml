@@ -1,0 +1,35 @@
+networks:
+  mynetwork:
+services:
+  backend:
+    build:
+      context: .
+    networks:
+      - mynetwork
+    ports:
+      - 8080:3000
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: exampleuser
+      DB_PASSWORD: examplepassword
+      DB_NAME: exampledb
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+  db:
+    image: mysql
+    restart: always
+    networks:
+      - mynetwork
+    environment:
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepassword
+      MYSQL_ROOT_PASSWORD: examplepassword
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
