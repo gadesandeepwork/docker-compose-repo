@@ -23,7 +23,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/docker-compose-project:latest
       - name: Deployment on GCP
-        uses: google-github-actions/deploy-cloudrun@v1
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{secrets.GCP_VM_HOST}}
           username: ${{secrets.GCP_VM_USERNAME}}
