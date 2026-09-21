@@ -3,7 +3,7 @@ networks:
 services:
   backend:
     build:
-      context: .
+      image: gadesandeepwork/docker-compose-project:latest
     networks:
       - mynetwork
     ports:
